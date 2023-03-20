@@ -10,7 +10,7 @@ namespace JewelryManagement.Gateways.Jewelry
         {
             string query = @"
                            update dbo.Jewelry
-                           set ShopId=@ShopId
+                           set ShopId=@ShopId,
                             Name=@Name,
                             Weight=@Weight,
                             TypeId=@TypeId,

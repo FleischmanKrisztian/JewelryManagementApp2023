@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using JewelryManagement.Gateways.JewelryType;
 
-namespace JewelryManagement.Contexts.Jewelry
+namespace JewelryManagement.Contexts.JewelryType
 {
     public class DeleteJewelryTypeContext
     {

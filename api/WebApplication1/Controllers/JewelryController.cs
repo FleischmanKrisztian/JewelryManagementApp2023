@@ -14,6 +14,7 @@ namespace JewelryManagement.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly GetJewelriesContext getJewelriesContext;
+        private readonly GetJewelryByIdContext getJewelryByIdContext;
         private readonly CreateJewelryContext createJewelryContext;
         private readonly UpdateJewelryContext updateJewelryContext;
         private readonly DeleteJewelryContext deleteJewelryContext;
@@ -23,6 +24,7 @@ namespace JewelryManagement.Controllers
             _env = env;
 
             getJewelriesContext = new GetJewelriesContext();
+            getJewelryByIdContext = new GetJewelryByIdContext();
             createJewelryContext = new CreateJewelryContext();
             updateJewelryContext = new UpdateJewelryContext();
             deleteJewelryContext = new DeleteJewelryContext();
@@ -32,6 +34,13 @@ namespace JewelryManagement.Controllers
         public JsonResult Get()
         {
             return getJewelriesContext.Execute();
+        }
+
+        [HttpGet]
+        [Route("edit/{id}")]
+        public JsonResult GetById(int id)
+        {
+            return getJewelryByIdContext.Execute(id);
         }
 
         [HttpPost]

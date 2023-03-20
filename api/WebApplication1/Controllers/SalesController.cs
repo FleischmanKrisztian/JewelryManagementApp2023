@@ -17,7 +17,7 @@ namespace JewelryManagement.Controllers
         {
             getSalesContext = new GetSalesContext();
             revertSaleContext = new RevertSaleContext(new IncrementJewelryQuantityContext(), new DeleteSaleContext());
-            finalizeSaleContext = new FinalizeSaleContext(new DecrementJewelryQuantityContext(), new CreateSaleContext());
+            finalizeSaleContext = new FinalizeSaleContext(new GetPriceOfJewelryContext(), new DecrementJewelryQuantityContext(), new CreateSaleContext());
         }
 
         [HttpGet]
@@ -26,10 +26,10 @@ namespace JewelryManagement.Controllers
             return getSalesContext.Execute();
         }
 
-        [HttpPost]
-        public JsonResult Post(Sale sale)
+        [HttpPost("{id}")]
+        public JsonResult Post(int Id)
         {
-            return finalizeSaleContext.Execute(sale);
+            return finalizeSaleContext.Execute(Id);
         }
 
         [HttpDelete("{id}")]

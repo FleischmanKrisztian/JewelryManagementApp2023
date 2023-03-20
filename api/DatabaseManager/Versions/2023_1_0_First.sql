@@ -6,5 +6,5 @@ if not exists (select * from sysobjects where name='Jewelry')
     FOREIGN KEY (TypeId) REFERENCES JewelryType(Id))
 
 if not exists (select * from sysobjects where name='Sales')
-    create table Sales (Id int identity (1,1),JewelryId int,PriceAtSale float(10), DateOfTransaction DATE, PRIMARY KEY (Id),
+    create table Sales (Id int identity (1,1),JewelryId int,PriceAtSale float(10), DateOfTransaction DATETIME, PRIMARY KEY (Id),
     FOREIGN KEY (JewelryId) REFERENCES Jewelry(Id))

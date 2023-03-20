@@ -1,25 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using JewelryManagement.Contexts.Jewelry;
+﻿using JewelryManagement.Contexts.Jewelry;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace JewelryManagement.Contexts.Sale
 {
     public class FinalizeSaleContext
     {
+        private GetPriceOfJewelryContext _getPriceOfJewelryContext;
         private DecrementJewelryQuantityContext _decrementJewelryQuantityContext;
         private CreateSaleContext _createSaleContext;
 
-        public FinalizeSaleContext(DecrementJewelryQuantityContext decrementJewelryQuantityContext, CreateSaleContext createSaleContext)
+        public FinalizeSaleContext(GetPriceOfJewelryContext getPriceOfJewelryContext, DecrementJewelryQuantityContext decrementJewelryQuantityContext, CreateSaleContext createSaleContext)
         {
+            _getPriceOfJewelryContext = getPriceOfJewelryContext;
             _decrementJewelryQuantityContext = decrementJewelryQuantityContext;
             _createSaleContext = createSaleContext;
         }
 
-        public JsonResult Execute(Models.Sale sale)
+        public JsonResult Execute(int id)
         {
             try
             {
-                _decrementJewelryQuantityContext.Execute(sale.JewelryId);
+                var sale = new Models.Sale(id, _getPriceOfJewelryContext.Execute(id), DateTime.Now);
                 _createSaleContext.Execute(sale);
+                _decrementJewelryQuantityContext.Execute(id);
                 return new JsonResult("Sale Finalized Successfully");
             }
             catch

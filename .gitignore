@@ -7,3 +7,11 @@
 /api/WebApplication1/Properties/PublishProfiles/
 /ui/node_modules/
 /api/.vs/
+/api/DatabaseManager/Properties/PublishProfiles
+/api/DatabaseManager/Versioning.csproj.user
+/api/WebApplication1/.config
+/api/WebApplication1/JewelryManagement.csproj.user
+*.png
+/api/WebApplication1/JewelryManagement.csproj.user
+/api/WebApplication1/JewelryManagement.csproj.user
+/api/DatabaseManager/Versioning.csproj.user
