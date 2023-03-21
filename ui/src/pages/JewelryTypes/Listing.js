@@ -14,7 +14,12 @@ const Listing = () => {
             fetch(variables.API_URL+"jewelrytype/" + id, {
                 method: "DELETE"
             }).then((res) => {
-                alert('Removed successfully.')
+                if(res.status === 400) {
+                    alert("Remove Failed!");
+                }
+                else{
+                    alert("Removed Successfully");
+                }
                 window.location.reload();
             }).catch((err) => {
                 console.log(err.message)

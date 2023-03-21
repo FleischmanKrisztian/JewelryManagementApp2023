@@ -31,7 +31,12 @@ const TypeEdit = () => {
         headers:{"content-type":"application/json"},
         body:JSON.stringify(typedata)
       }).then((res)=>{
-        alert('Saved successfully.')
+        if(res.status === 400) {
+            alert("Save Failed!");
+        }
+        else{
+            alert("Saved Successfully");
+        }
         navigate('/jewelrytypes');
       }).catch((err)=>{
         console.log(err.message)

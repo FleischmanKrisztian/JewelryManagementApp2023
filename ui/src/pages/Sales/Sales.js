@@ -11,11 +11,16 @@ const Listing = () => {
 
     const Removefunction = (id) => {
         console.log(typeFilter);
-        if (window.confirm('Do you want to remove?')) {
+        if (window.confirm('Do you want to Revert?')) {
             fetch(variables.API_URL+"sales/" + id, {
                 method: "DELETE"
             }).then((res) => {
-                alert('Sale Reverted successfully.')
+                if(res.status === 400) {
+                    alert("Revert Failed!");
+                }
+                else{
+                    alert("Sale Reverted Successfully");
+                }
                 window.location.reload();
             }).catch((err) => {
                 console.log(err.message)

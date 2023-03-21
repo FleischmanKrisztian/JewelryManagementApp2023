@@ -24,7 +24,9 @@ namespace JewelryManagement.Contexts.Sale
             }
             catch
             {
-                return new JsonResult("Deletion Failed!");
+                var result = new JsonResult("Revert failed!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

@@ -20,7 +20,12 @@ const Listing = () => {
             fetch(variables.API_URL+"jewelry/" + id, {
                 method: "DELETE"
             }).then((res) => {
-                alert('Removed successfully.')
+                if(res.status === 400) {
+                    alert("Failed to Remove!");
+                }
+                else{
+                    alert("Removed Successfully");
+                }
                 window.location.reload();
             }).catch((err) => {
                 console.log(err.message)
@@ -32,7 +37,12 @@ const Listing = () => {
         fetch(variables.API_URL+"sales/" + id, {
             method: "POST",
         }).then((res) => {
-            alert('Sold successfully.')
+            if(res.status === 400) {
+                alert("Creating Sale Failed!");
+            }
+            else{
+                alert("Sold Successfully");
+            }
             window.location.reload();
         }).catch((err) => {
             console.log(err.message)

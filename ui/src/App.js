@@ -6,6 +6,7 @@ import JewelryListing from "./pages/Jewelries/Listing"
 import JewelryCreate from "./pages/Jewelries/Create"
 import JewelryEdit from "./pages/Jewelries/Edit"
 import SalesListing from "./pages/Sales/Sales"
+import Admin from "./pages/Admin/Admin"
 import './App.css';
 import { Route, Routes } from "react-router-dom"
 
@@ -24,7 +25,9 @@ function App() {
           <Route path='/jewelryTypes/create' element={<TypeCreate />}></Route>
           <Route path='/jewelryTypes/edit/:typeid' element={<TypeEdit />}></Route>
 
-          <Route path='/Sales' element={<SalesListing />}></Route>          
+          <Route path='/Sales' element={<SalesListing />}></Route>      
+
+          <Route path='/Admin' element={<Admin />}></Route>            
         </Routes>
       </div>
     </>

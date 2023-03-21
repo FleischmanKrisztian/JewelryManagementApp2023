@@ -11,16 +11,18 @@ namespace JewelryManagement.Contexts.Admin
         {
             restoreFromBackupGateway = new RestoreFromBackupGateway();
         }
-        public JsonResult Execute(string location)
+        public JsonResult Execute(string filename)
         {
             try
             {
-                restoreFromBackupGateway.Restore(location);
+                restoreFromBackupGateway.Restore(filename);
                 return new JsonResult("Database restored Successfully");
             }
             catch
             {
-                return new JsonResult("Restore Failed!");
+                var result = new JsonResult("Restore Failed!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

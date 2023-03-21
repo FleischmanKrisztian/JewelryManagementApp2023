@@ -81,7 +81,9 @@ namespace JewelryManagement.Controllers
             }
             catch (Exception)
             {
-                return new JsonResult("anonymous.png");
+                var result = new JsonResult("Photo could not be saved!");
+                result.StatusCode = 400;
+                return result; ;
             }
         }
     }

@@ -22,7 +22,9 @@ namespace JewelryManagement.Contexts.JewelryType
             }
             catch
             {
-                return new JsonResult("Add Failed!");
+                var result = new JsonResult("Add failed!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

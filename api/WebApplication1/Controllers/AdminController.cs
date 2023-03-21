@@ -26,10 +26,10 @@ namespace JewelryManagement.Controllers
             return createBackupContext.Execute();
         }
 
-        [HttpPost]
-        public JsonResult Post(string location)
+        [HttpPost("{filename}")]
+        public JsonResult Post(string filename)
         {
-            return restoreFromBackupContext.Execute(location);
+            return restoreFromBackupContext.Execute(filename);
         }
     }
 }

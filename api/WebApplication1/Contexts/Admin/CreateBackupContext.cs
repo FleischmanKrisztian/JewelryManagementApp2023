@@ -21,7 +21,9 @@ namespace JewelryManagement.Contexts.Admin
             }
             catch
             {
-                return new JsonResult("Backup Failed!");
+                var result = new JsonResult("Backup Failed!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

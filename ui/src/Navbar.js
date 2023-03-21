@@ -10,6 +10,7 @@ export default function Navbar() {
         <CustomLink to="/Jewelries">Bijuterii</CustomLink>
         <CustomLink to="/Jewelrytypes">Tipuri de Bijuterii</CustomLink>
         <CustomLink to="/Sales">Vanzari</CustomLink>
+        <CustomLink to="/Admin">Admin</CustomLink>
       </ul>
     </nav>
   )

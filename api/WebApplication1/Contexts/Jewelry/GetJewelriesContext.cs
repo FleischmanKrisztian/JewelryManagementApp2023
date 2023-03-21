@@ -20,7 +20,9 @@ namespace JewelryManagement.Contexts.Jewelry
             }
             catch
             {
-                return new JsonResult("Failed To Get Jewelries!");
+                var result = new JsonResult("Failed To Get Jewelries!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

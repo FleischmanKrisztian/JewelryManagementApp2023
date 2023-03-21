@@ -65,7 +65,7 @@ const JewelryCreate = () => {
             alert("Create Failed!");
         }
         else{
-            alert("Saved Successfully!");
+            alert("Created Successfully");
         }
         navigate('/jewelries');
       }).catch((err)=>{

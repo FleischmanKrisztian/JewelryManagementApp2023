@@ -28,7 +28,9 @@ namespace JewelryManagement.Contexts.Sale
             }
             catch
             {
-                return new JsonResult("Sale Failed!");
+                var result = new JsonResult("Sale failed!");
+                result.StatusCode = 400;
+                return result;
             }
         }
     }

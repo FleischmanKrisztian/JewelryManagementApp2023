@@ -17,7 +17,12 @@ const TypeCreate = () => {
         headers:{"content-type":"application/json"},
         body:JSON.stringify(typedata)
       }).then((res)=>{
-        alert('Saved successfully.')
+        if(res.status === 400) {
+            alert("Create Failed!");
+        }
+        else{
+            alert("Created Successfully");
+        }
         navigate('/jewelrytypes');
       }).catch((err)=>{
         console.log(err.message)

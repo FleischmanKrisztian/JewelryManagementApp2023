@@ -25,7 +25,7 @@ namespace JewelryManagement.Gateways.Admin
 
         private string BuildBackupPathWithFilename()
         {
-            string filename = string.Format("{0}-{1}.bak", Config.Get("ConnectionStrings:Name"), DateTime.Now.ToString("yyyy-MM-dd"));
+            string filename = string.Format("{0}-{1}.bak", Config.Get("ConnectionStrings:Name"), DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
 
             return Path.Combine(Config.Get("BackupLocation"), filename);
         }
