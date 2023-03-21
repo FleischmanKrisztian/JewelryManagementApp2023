@@ -4,6 +4,10 @@ import {variables} from '../../Variables';
 
 const Listing = () => {
     const [jewelrydata, jewelrydatachange] = useState(null);
+    const[typedata, typedatachange] = useState([]);
+    const[typeFilter,valchange1]=useState("");
+    const[generalFilter,valchange2]=useState("");
+
     const navigate = useNavigate();
 
     const LoadEdit = (id) => {
@@ -11,6 +15,7 @@ const Listing = () => {
     }
 
     const Removefunction = (id) => {
+        console.log(typeFilter);
         if (window.confirm('Do you want to remove?')) {
             fetch(variables.API_URL+"jewelry/" + id, {
                 method: "DELETE"
@@ -35,14 +40,21 @@ const Listing = () => {
     }
 
     useEffect(() => {
-        fetch(variables.API_URL+"jewelry").then((res) => {
-            return res.json();
-        }).then((resp) => {
-            jewelrydatachange(resp);
+        Promise.all([
+          fetch(variables.API_URL+"jewelry"),
+          fetch(variables.API_URL+"jewelrytype"),
+        ])
+          .then(([jewelryDetails, typeDetails]) => 
+            Promise.all([jewelryDetails.json(), typeDetails.json()])
+          )
+          .then(([jewelryData, typeData]) => {
+            jewelrydatachange(jewelryData);
+            typedatachange(typeData);
         }).catch((err) => {
             console.log(err.message);
-        })
-    }, [])
+          });
+      }, []);
+
     return (
         <div className="container">
             <div className="card">
@@ -52,6 +64,22 @@ const Listing = () => {
                 <div className="card-body">
                     <div className="divbtn">
                         <Link to="/jewelries/create" className="btn btn-success">Add New (+)</Link>
+                    </div>
+                    <br></br>
+                    <br></br>
+                    <hr></hr>
+                    <div className="col-lg-6">
+                        <div className="form-group">
+                            <label>Tip De Bijuterie:</label>
+                            <select defaultValue={""} onChange={e=>valchange1(e.target.value)} className="form-control">
+                            <option value={""}>Toate</option>
+                                {
+                                    typedata.map(result=>(<option onChange={e=>valchange1(e.target.value)} key={result.Id} value={result.Name}>{result.Name}</option>))
+                                }
+                            </select>
+                            <label>Cauta:</label>
+                            <input value={generalFilter} onChange={e=>valchange2(e.target.value)} className="form-control"></input>
+                        </div>
                     </div>
                     <table className="table table-bordered">
                         <thead className="bg-dark text-white">
@@ -68,7 +96,7 @@ const Listing = () => {
                         </thead>
                         <tbody>
                             {jewelrydata &&
-                                jewelrydata.map(item => (
+                                jewelrydata.map(item => ((item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Name.toLowerCase().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
                                     <tr key={item.Id}>
                                         <td><img src={variables.PHOTO_STORAGE+item.PhotoFileName} border={1} height={50} width={50}></img></td>
                                         <td>{item.ShopId}</td>
@@ -83,6 +111,7 @@ const Listing = () => {
                                             <button onClick={() => { Sellfunction(item.Id) }} className="btn btn-success">Sell one</button>
                                         </td>
                                     </tr>
+                                    : null
                                 ))
                             }
                         </tbody>

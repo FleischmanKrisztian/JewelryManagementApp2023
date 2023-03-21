@@ -36,7 +36,6 @@ const TypeEdit = () => {
       }).catch((err)=>{
         console.log(err.message)
       })
-
     }
 
     return (

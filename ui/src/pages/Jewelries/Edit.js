@@ -4,7 +4,7 @@ import {variables} from '../../Variables';
 
 const JewelryEdit = () => {
     const { jewelryid } = useParams();
-    const[typeiddata, typedatachange] = useState([]);
+    const[Typedata, typedatachange] = useState([]);
     const PhotoPath = variables.PHOTO_STORAGE;
 
 
@@ -124,7 +124,7 @@ const JewelryEdit = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Greutate</label>
-                                            <input type={"number"} required value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required  min={0} step={0.00001} value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
                                         {Weight.length===0 && validation2 && <span className="text-danger">Enter the Weight</span>}
                                         </div>
                                     </div>
@@ -134,7 +134,7 @@ const JewelryEdit = () => {
                                             <select value={TypeId} required onBlur={e=>valchange3(true)} onChange={e=>typechange(e.target.value)} className="form-control">
                                             <option disabled value={""}>Choose a Type</option>
                                                 {
-                                                    typeiddata.map(result=>(<option onChange={e=>typechange(e.target.value)} key={result.Id} value={result.Id}>{result.Name}</option>))
+                                                    Typedata.map(result=>(<option onChange={e=>typechange(e.target.value)} key={result.Id} value={result.Id}>{result.Name}</option>))
                                                 }
                                             </select>
                                             {TypeId==="" && validation3 && <span className="text-danger">Enter the Type</span>}
@@ -143,14 +143,14 @@ const JewelryEdit = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Quantity</label>
-                                            <input type={"number"} required value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required  min={0} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
                                         {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Price</label>
-                                            <input type={"number"} required value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required min={0} step={0.00001} value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
                                         {Price.length===0 && validation5 && <span className="text-danger">Enter the Price</span>}
                                         </div>
                                     </div>

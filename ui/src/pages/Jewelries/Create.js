@@ -101,7 +101,7 @@ const JewelryCreate = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Greutate</label>
-                                            <input type={"number"} required value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} min={0} step={0.00001} required value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
                                         {Weight.length===0 && validation2 && <span className="text-danger">Enter the Weight</span>}
                                         </div>
                                     </div>
@@ -120,14 +120,14 @@ const JewelryCreate = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Quantity</label>
-                                            <input type={"number"} required value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required min={0} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
                                         {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Price</label>
-                                            <input type={"number"} required value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required min={0} step={0.00001} value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
                                         {Price.length===0 && validation5 && <span className="text-danger">Enter the Price</span>}
                                         </div>
                                     </div>

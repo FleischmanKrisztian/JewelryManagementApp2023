@@ -12,7 +12,7 @@ namespace JewelryManagement.Gateways.Sale
         public JsonResult Get()
         {
             string query = @"
-                            select Sales.*, Jewelry.Name, Jewelry.ShopId, Jewelry.Weight, JewelryType.Name as Type
+                            select Sales.*, Jewelry.Name, Jewelry.ShopId, Jewelry.Weight, Jewelry.PhotoFilename, JewelryType.Name as Type
 							from dbo.Sales left join dbo.Jewelry on Sales.JewelryId = Jewelry.Id left join dbo.JewelryType on Jewelry.TypeId = JewelryType.Id
                             "
             ;
