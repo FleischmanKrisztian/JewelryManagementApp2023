@@ -32,12 +32,11 @@ const TypeEdit = () => {
         body:JSON.stringify(typedata)
       }).then((res)=>{
         if(res.status === 400) {
-            alert("Save Failed!");
+            navigate('/jewelrytypes?success=false');
         }
         else{
-            alert("Saved Successfully");
+            navigate('/jewelrytypes?success=true');
         }
-        navigate('/jewelrytypes');
       }).catch((err)=>{
         console.log(err.message)
       })

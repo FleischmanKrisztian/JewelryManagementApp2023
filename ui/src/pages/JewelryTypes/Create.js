@@ -18,16 +18,14 @@ const TypeCreate = () => {
         body:JSON.stringify(typedata)
       }).then((res)=>{
         if(res.status === 400) {
-            alert("Create Failed!");
+            navigate('/jewelrytypes?success=false');
         }
         else{
-            alert("Created Successfully");
+            navigate('/jewelrytypes?success=true');
         }
-        navigate('/jewelrytypes');
       }).catch((err)=>{
         console.log(err.message)
       })
-
     }
 
     return (

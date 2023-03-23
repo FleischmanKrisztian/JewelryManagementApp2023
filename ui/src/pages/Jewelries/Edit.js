@@ -77,12 +77,11 @@ const JewelryEdit = () => {
         body:JSON.stringify(jewelryData)
     }).then((res)=>{
         if(res.status === 400) {
-            alert("Edit Failed!");
+            navigate('/jewelries?success=false');
         }
         else{
-            alert("Saved Successfully!");
+            navigate('/jewelries?success=true');
         }
-        navigate('/jewelries');
       }).catch((err)=>{
         console.log(err.message)
       })

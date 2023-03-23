@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import toast, {Toaster} from "react-hot-toast";
 import {variables} from '../../Variables';
 
 const Listing = () => {
     const [typedata, typedatachange] = useState(null);
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const LoadEdit = (id) => {
         navigate("/jewelrytypes/edit/" + id);
@@ -15,10 +17,10 @@ const Listing = () => {
                 method: "DELETE"
             }).then((res) => {
                 if(res.status === 400) {
-                    alert("Remove Failed!");
+                    navigate('/jewelrytypes?success=false');
                 }
                 else{
-                    alert("Removed Successfully");
+                    navigate('/jewelrytypes?success=true');
                 }
                 window.location.reload();
             }).catch((err) => {
@@ -27,7 +29,21 @@ const Listing = () => {
         }
     }
 
+    const toastHandler = (success) => {
+        if(success === null)
+        {
+            return;
+        }
+        if(success === "true"){
+            toast.success("Salvat cu Succes!");
+        }
+        else{
+            toast.error("A aparut o eroare!");
+        }
+    }
+
     useEffect(() => {
+        toastHandler(searchParams.get("success"));
         fetch(variables.API_URL+"jewelrytype").then((res) => {
             return res.json();
         }).then((resp) => {
@@ -42,11 +58,12 @@ const Listing = () => {
                 <div className="card-title">
                     <h2>Tipuri de Bijuterii</h2>
                 </div>
+                <Toaster/>
                 <div className="card-body">
                     <div className="divbtn">
                         <Link to="/jewelryTypes/create" className="btn btn-success">Add New (+)</Link>
                     </div>
-                    <table className="table table-bordered">
+                    <table className="table table-bordered table-align">
                         <thead className="bg-dark text-white">
                             <tr>
                                 <td>Name</td>
@@ -61,8 +78,8 @@ const Listing = () => {
                                 typedata.map(item => (
                                     <tr key={item.Id}>
                                         <td>{item.Name}</td>
-                                        <td>{item.Total_Quantity}</td>
-                                        <td>{item.Total_Weight}</td>
+                                        <td>{item.Total_Quantity ?? 0}</td>
+                                        <td>{item.Total_Weight ?? 0}</td>
                                         <td>
                                             <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Edit</button>
                                             <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button>

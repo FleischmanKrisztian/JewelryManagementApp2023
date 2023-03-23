@@ -62,12 +62,11 @@ const JewelryCreate = () => {
         body:JSON.stringify(jewelrydata)
       }).then((res)=>{
         if(res.status === 400) {
-            alert("Create Failed!");
+            navigate('/jewelries?success=false');
         }
         else{
-            alert("Created Successfully");
+            navigate('/jewelries?success=true');
         }
-        navigate('/jewelries');
       }).catch((err)=>{
         console.log(err.message)
       })

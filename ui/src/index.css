@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html {
+  height:100vh;
+  width: 100vw;
+}
+
 body {
   margin: 0;
 }
@@ -56,6 +61,10 @@ body {
   background: linear-gradient(45deg, #49a09d, #5f2c82);
   font-family: sans-serif;
   font-weight: 100;
+}
+
+.table-align {
+  vertical-align: middle !important;
 }
 /* .container {
   position: absolute;
