@@ -14,13 +14,13 @@ namespace JewelryManagement.Contexts.Sale
             _deleteSaleContext = deleteSaleContext;
         }
 
-        public JsonResult Execute(int id)
+        public JsonResult Execute(int saleid, int jewelryid)
         {
             try
             {
-                _incrementJewelryQuantityContext.Execute(id);
-                _deleteSaleContext.Execute(id);
-                return new JsonResult("Deleted Successfully");
+                _deleteSaleContext.Execute(saleid);
+                _incrementJewelryQuantityContext.Execute(jewelryid);
+                return new JsonResult("Reverted Successfully");
             }
             catch
             {

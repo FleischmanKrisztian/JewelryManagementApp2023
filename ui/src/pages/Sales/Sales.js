@@ -4,6 +4,7 @@ import {variables} from '../../Variables';
 import toast, {Toaster} from "react-hot-toast";
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable'
+import { tab } from "@testing-library/user-event/dist/tab";
 
 const Listing = () => {
     const[salesdata, salesdatachange] = useState(null);
@@ -14,35 +15,72 @@ const Listing = () => {
     const[typeSort,setTypeSort]=useState(false);
     const[dateSort,setDateSort]=useState(false);
     const[priceSort,setPriceSort]=useState(false);
-    const[soldAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split('T')[0]);
-    const[soldBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split('T')[0]);
+    const[soldAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split(':')[0]+':00');
+    const[soldBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[searchParams] = useSearchParams();
-
+    const[defaultObject,setDefaultObject] = useState(null);
+    
     const navigate = useNavigate();
     
-    const downloadPdf=()=>{
-        const doc = new jsPDF();
-        autoTable(doc, { 
-         html: '#my-table',
-         theme: 'striped', 
-         columns: 
-         [
-          {header: '0', dataKey: 'photo'},
-          {header: '1', dataKey: 'shopid'},
-          {header: '2', dataKey: 'name'},
-          {header: '3', dataKey: 'price'},
-          {header: '4', dataKey: 'date'},
-          {header: '5', dataKey: 'type'},
-          {header: '6', dataKey: 'weight'},
-        ],    
-        });
-    doc.save('Sales-' + new Date().toLocaleDateString().split('T')[0] + '.pdf');
+    function headRows() {
+        return [
+          { number: 'Numar', shopid: 'Shop Id', price: 'Pret', date: 'Data vanzarii', type: 'Tip de Bijuterie', weight: 'Greutate' },
+        ]
+      }
+
+      function bodyRows() {
+        var table = document.getElementById('my-table');
+        var tBody = table.getElementsByTagName('tbody')[0];
+        var tableRow = tBody.getElementsByTagName('tr');
+        var body = []
+        for (var j = 1; j <= tableRow.length; j++) {
+          body.push({
+            number: j,
+            shopid: table.rows[j].cells[1].innerHTML,
+            price: table.rows[j].cells[2].innerHTML,
+            date: table.rows[j].cells[3].innerHTML,
+            type: table.rows[j].cells[4].innerHTML,
+            weight: table.rows[j].cells[5].innerHTML,
+          })
+        }      
+        return body
     }
 
-    const Removefunction = (id) => {
+    function getTotalPrice(){
+        var table = document.getElementById("my-table"), sumVal = 0;   
+        for(var i = 1; i < table.rows.length; i++)
+        {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[2].innerHTML);
+        }      
+        return sumVal.toFixed(2);
+    }
+
+    function getTotalWeight(){
+        var table = document.getElementById("my-table"), sumVal = 0;      
+        for(var i = 1; i < table.rows.length; i++)
+        {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[5].innerHTML);
+        }
+        return sumVal.toFixed(2);
+    }
+
+    const downloadPdf=()=>{
+        const doc = new jsPDF();
+        var finalY = 0
+        doc.text('Intervalul Vânzărilor: ' + soldAfter.toLocaleString() + ' - ' + soldBefore.toLocaleString(), 40, finalY + 15)
+        doc.autoTable({
+            startY: finalY + 20,
+            head: headRows(),
+            body: bodyRows(),
+            foot: [['Total:', '',getTotalPrice(),'','',getTotalWeight()]],
+        })
+        doc.save('Sales-' + new Date().toLocaleDateString().split('Z')[0] + '.pdf');
+    }
+
+    const Removefunction = (saleid,jewelryid) => {
         console.log(typeFilter);
-        if (window.confirm('Do you want to Revert?')) {
-            fetch(variables.API_URL+"sales/" + id, {
+        if (window.confirm('Sigur vreti să faceţi retur?')) {
+            fetch(variables.API_URL+"sales/" + saleid + "/" + jewelryid, {
                 method: "DELETE"
             }).then((res) => {
                 if(res.status === 400) {
@@ -56,6 +94,12 @@ const Listing = () => {
                 console.log(err.message)
             })
         }
+    }
+
+    const fetchRowDetails = (item) => {
+        var table = document.getElementById("topTable")
+        table.removeAttribute("hidden");
+        setDefaultObject(item);
     }
 
     const onWeightSort = () =>{
@@ -100,10 +144,10 @@ const Listing = () => {
             return;
         }
         if(success === "true"){
-            toast.success("Salvat cu Succes!");
+            toast.success("Retur cu Succes!");
         }
         else{
-            toast.error("A aparut o eroare!");
+            toast.error("A apărut o eroare!");
         }
     }
 
@@ -138,6 +182,32 @@ const Listing = () => {
                 <div className="card-body">
                     <br></br>
                     <br></br>
+                    <table id="topTable" hidden className="table table-striped table-bordered table-align">
+                        <thead className="bg-dark text-white">
+                            <tr>
+                                <td>Photo</td>
+                                <td>Shop Id</td>
+                                <td>Price</td>
+                                <td>Date</td>
+                                <td>Type</td>
+                                <td>Weight</td>
+                                <td>Optiuni</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr key={defaultObject?.Id}>
+                                <td><img src={variables.PHOTO_STORAGE+defaultObject?.PhotoFilename} border={1} height={50} width={50}></img></td>
+                                <td>{defaultObject?.ShopId}</td>
+                                <td>{defaultObject?.PriceAtSale}</td>
+                                <td>{new Date(defaultObject?.DateOfTransaction).toLocaleString('ro-RO')}</td>
+                                <td>{defaultObject?.Type}</td>
+                                <td>{defaultObject?.Weight}</td>
+                                <td>
+                                    <button onClick={() => { Removefunction(defaultObject?.Id,defaultObject?.JewelryId) }} className="btn btn-danger">Revert</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <hr></hr>
                     <Toaster/>
                     <div style={{display:'flex',marginBottom:'20px',justifyContent:'space-evenly',width:'100%'}}>
@@ -151,44 +221,38 @@ const Listing = () => {
                                     }
                                 </select>
                                 <label>Vandut Dupa:</label>
-                                <input type={"date"}value={soldAfter} onChange={e=>valchange3(e.target.value)} className="form-control"></input>
+                                <input type={"datetime-local"}value={soldAfter} onChange={e=>valchange3(e.target.value)} className="form-control"></input>
                             </div>
                         </div>
                         <div className="col-lg-6">
                             <label>Cauta:</label>
                             <input value={generalFilter} onChange={e=>valchange2(e.target.value)} className="form-control"></input>
                             <label>Vandut inainte de:</label>
-                            <input type={"date"} value={soldBefore} onChange={e=>valchange4(e.target.value)} className="form-control"></input>
+                            <input type={"datetime-local"} value={soldBefore} onChange={e=>valchange4(e.target.value)} className="form-control"></input>
                         </div>
                     </div>
                     <button className="btn btn-primary" style={{marginBottom:'20px'}} onClick={downloadPdf}>PDF</button>
-                    <table id="my-table" className="table table-bordered table-align">
+                    <table id="my-table" className="table table-striped table-bordered table-align">
                         <thead className="bg-dark text-white">
                             <tr>
                                 <td>Photo</td>
                                 <td>Shop Id</td>
-                                <td>Name</td>
                                 <td style={{cursor:"pointer"}} onClick={onPriceSort}>Price</td>
                                 <td style={{cursor:"pointer"}} onClick={onDateSort}>Date</td>
                                 <td style={{cursor:"pointer"}} onClick={onTypeSort}>Type</td>
                                 <td style={{cursor:"pointer"}} onClick={onWeightSort}>Weight</td>
-                                <td>Optiuni</td>
                             </tr>
                         </thead>
                         <tbody>
                             {salesdata &&
-                                salesdata.map(item => ((new Date(soldAfter) < new Date(item.DateOfTransaction) && new Date(soldBefore) > new Date(item.DateOfTransaction)) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Name.toLowerCase().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
-                                    <tr key={item.Id}>
+                                salesdata.map(item => ((new Date(soldAfter) < new Date(item.DateOfTransaction) && new Date(soldBefore) > new Date(item.DateOfTransaction)) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
+                                    <tr onClick={()=>fetchRowDetails(item)} key={item.Id}>
                                         <td><img src={variables.PHOTO_STORAGE+item.PhotoFilename} border={1} height={50} width={50}></img></td>
                                         <td>{item.ShopId}</td>
-                                        <td>{item.Name}</td>
                                         <td>{item.PriceAtSale}</td>
-                                        <td>{new Date(item.DateOfTransaction).toLocaleDateString().split('T')[0]}</td>
+                                        <td>{new Date(item.DateOfTransaction).toLocaleString('ro-RO')}</td>
                                         <td>{item.Type}</td>
                                         <td>{item.Weight}</td>
-                                        <td>
-                                            <button onClick={() => { Removefunction(item.JewelryId) }} className="btn btn-danger">Revert</button>
-                                        </td>
                                     </tr>
                                     : null
                                 ))

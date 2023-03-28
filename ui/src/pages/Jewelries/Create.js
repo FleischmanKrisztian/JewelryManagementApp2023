@@ -6,14 +6,12 @@ const JewelryCreate = () => {
     const[typeiddata, typedatachange] = useState([]);
 
     const[ShopId,shopidchange]=useState("");
-    const[Name,namechange]=useState("");
     const[Weight,weightchange]=useState("");
     const[TypeId,typechange]=useState(0);
     const[Quantity,quantitychange]=useState("");
     const[Price,pricechange]=useState("");
     const[PhotoFileName,photochange]=useState("default.png");
 
-    const[validation1,valchange1]=useState(false);
     const[validation2,valchange2]=useState(false);
     const[validation3,valchange3]=useState(false);
     const[validation4,valchange4]=useState(false);
@@ -55,7 +53,7 @@ const JewelryCreate = () => {
 
     const handlesubmit=(e)=>{
       e.preventDefault();
-      const jewelrydata={ShopId,Name,Weight,TypeId,Quantity,Price,PhotoFileName};
+      const jewelrydata={ShopId,Weight,TypeId,Quantity,Price,PhotoFileName};
       fetch(variables.API_URL+"jewelry",{
         method:"POST",
         headers:{"content-type":"application/json"},
@@ -89,14 +87,6 @@ const JewelryCreate = () => {
                                         <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
                                     </div>
                                 </div>
-
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>Name</label>
-                                            <input required value={Name} onBlur={e=>valchange1(true)} onChange={e=>namechange(e.target.value)} className="form-control"></input>
-                                        {Name.length===0 && validation1 && <span className="text-danger">Enter the name</span>}
-                                        </div>
-                                    </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Greutate</label>
@@ -119,7 +109,7 @@ const JewelryCreate = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Quantity</label>
-                                            <input type={"number"} required min={0} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required min={1} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
                                         {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
                                         </div>
                                     </div>

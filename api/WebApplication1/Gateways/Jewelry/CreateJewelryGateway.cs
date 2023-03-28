@@ -10,8 +10,8 @@ namespace JewelryManagement.Gateways.Jewelry
         {
             string query = @"
                            insert into dbo.Jewelry
-                           (ShopId, Name, Weight, TypeId,Quantity,Price, PhotoFileName, IsDeleted)
-                           values (@ShopId,@Name,@Weight,@TypeId,@Quantity,@Price, @PhotoFileName, 0)";
+                           (ShopId, Weight, TypeId,Quantity,Price, PhotoFileName, IsDeleted)
+                           values (@ShopId,@Weight,@TypeId,@Quantity,@Price, @PhotoFileName, 0)";
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");
@@ -22,7 +22,6 @@ namespace JewelryManagement.Gateways.Jewelry
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("@ShopId", jewelry.ShopId);
-                    myCommand.Parameters.AddWithValue("@Name", jewelry.Name);
                     myCommand.Parameters.AddWithValue("@Weight", jewelry.Weight);
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);

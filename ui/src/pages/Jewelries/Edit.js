@@ -19,7 +19,6 @@ const JewelryEdit = () => {
           .then(([jewelryData, typeData]) => {
             idchange(jewelryData[0].Id);
             shopidchange(jewelryData[0].ShopId);
-            namechange(jewelryData[0].Name);           
             weightchange(jewelryData[0].Weight);
             typechange(jewelryData[0].TypeId);
             quantitychange(jewelryData[0].Quantity);
@@ -33,14 +32,12 @@ const JewelryEdit = () => {
 
     const[Id,idchange]=useState("");
     const[ShopId,shopidchange]=useState("");
-    const[Name,namechange]=useState("");
     const[Weight,weightchange]=useState("");
     const[TypeId,typechange]=useState("");
     const[Quantity,quantitychange]=useState("");
     const[Price,pricechange]=useState("");
     const[PhotoFileName,photochange]=useState("default.png");
 
-    const[validation1,valchange1]=useState(false);
     const[validation2,valchange2]=useState(false);
     const[validation3,valchange3]=useState(false);
     const[validation4,valchange4]=useState(false);
@@ -69,7 +66,7 @@ const JewelryEdit = () => {
 
     const handlesubmit=(e)=>{
       e.preventDefault();
-      const jewelryData={Id,ShopId,Name,Weight,TypeId,Quantity,Price,PhotoFileName};
+      const jewelryData={Id,ShopId,Weight,TypeId,Quantity,Price,PhotoFileName};
       
       fetch(variables.API_URL+"jewelry",{
         method:"PUT",
@@ -102,24 +99,10 @@ const JewelryEdit = () => {
                                 <div className="row">
                                 <div className="col-lg-12">
                                     <div className="form-group">
-                                        <label>ID</label>
-                                        <input value={Id} disabled="disabled" className="form-control"></input>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
                                         <label>ShopId</label>
                                         <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
                                     </div>
                                 </div>
-
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>Name</label>
-                                            <input required value={Name} onBlur={e=>valchange1(true)} onChange={e=>namechange(e.target.value)} className="form-control"></input>
-                                        {Name.length===0 && validation1 && <span className="text-danger">Enter the name</span>}
-                                        </div>
-                                    </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Greutate</label>
@@ -142,7 +125,7 @@ const JewelryEdit = () => {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Quantity</label>
-                                            <input type={"number"} required  min={0} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} required  min={1} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
                                         {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
                                         </div>
                                     </div>

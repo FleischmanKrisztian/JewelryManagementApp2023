@@ -32,10 +32,10 @@ namespace JewelryManagement.Controllers
             return finalizeSaleContext.Execute(Id);
         }
 
-        [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        [HttpDelete("{saleid}/{jewelryid}")]
+        public JsonResult Delete(int saleid,int jewelryid)
         {
-            return revertSaleContext.Execute(id);
+            return revertSaleContext.Execute(saleid,jewelryid);
         }
     }
 }

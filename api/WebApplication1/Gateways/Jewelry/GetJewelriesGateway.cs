@@ -10,7 +10,7 @@ namespace JewelryManagement.Gateways.Jewelry
         public JsonResult Get()
         {
             string query = @"
-                            select Jewelry.Id, ShopId, Jewelry.Name ,Weight, JewelryType.Name as Type, Quantity, Price, PhotoFileName
+                            select Jewelry.Id, ShopId, Weight, JewelryType.Name as Type, Quantity, Price, PhotoFileName
                             from
                             dbo.Jewelry left join dbo.JewelryType on Jewelry.TypeId = JewelryType.Id
                             where isDeleted = 0";

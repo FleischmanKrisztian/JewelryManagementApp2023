@@ -57,12 +57,6 @@ const TypeEdit = () => {
                                 <div className="row">
                                 <div className="col-lg-12">
                                     <div className="form-group">
-                                        <label>ID</label>
-                                        <input value={Id} disabled="disabled" className="form-control"></input>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
                                         <label>Name</label>
                                         <input required value={Name} onMouseDown={e=>valchange(true)} onChange={e=>namechange(e.target.value)} className="form-control"></input>
                                     {Name.length===0 && validation && <span className="text-danger">Enter the name</span>}

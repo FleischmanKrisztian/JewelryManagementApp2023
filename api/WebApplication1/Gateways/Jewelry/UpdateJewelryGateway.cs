@@ -11,7 +11,6 @@ namespace JewelryManagement.Gateways.Jewelry
             string query = @"
                            update dbo.Jewelry
                            set ShopId=@ShopId,
-                            Name=@Name,
                             Weight=@Weight,
                             TypeId=@TypeId,
                             Quantity=@Quantity,
@@ -30,7 +29,6 @@ namespace JewelryManagement.Gateways.Jewelry
                 {
                     myCommand.Parameters.AddWithValue("@Id", jewelry.Id);
                     myCommand.Parameters.AddWithValue("@ShopId", jewelry.ShopId);
-                    myCommand.Parameters.AddWithValue("@Name", jewelry.Name);
                     myCommand.Parameters.AddWithValue("@Weight", jewelry.Weight);
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);

@@ -6,8 +6,6 @@
 
         public string ShopId { get; set; }
 
-        public string Name { get; set; }
-
         public float Weight { get; set; }
 
         public int TypeId { get; set; }

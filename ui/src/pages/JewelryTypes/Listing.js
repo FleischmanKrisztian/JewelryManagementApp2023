@@ -69,7 +69,7 @@ const Listing = () => {
                                 <td>Name</td>
                                 <td>Total_Quantity</td>
                                 <td>Total_Weight</td>
-                                <td>Optiuni</td>
+                                {/* <td>Optiuni</td> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -80,10 +80,10 @@ const Listing = () => {
                                         <td>{item.Name}</td>
                                         <td>{item.Total_Quantity ?? 0}</td>
                                         <td>{item.Total_Weight ?? 0}</td>
-                                        <td>
+                                        {/* <td>
                                             <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Edit</button>
                                             <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 ))
                             }

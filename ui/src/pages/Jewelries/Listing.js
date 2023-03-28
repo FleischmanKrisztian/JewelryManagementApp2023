@@ -13,6 +13,7 @@ const Listing = () => {
     const[quantitySort,setQuantitySort]=useState(false);
     const[priceSort,setPriceSort]=useState(false);
     const[searchParams] = useSearchParams();
+    const[defaultObject,setDefaultObject] = useState(null);
 
     const navigate = useNavigate();
 
@@ -20,25 +21,8 @@ const Listing = () => {
         navigate("/jewelries/edit/" + id);
     }
 
-    const Removefunction = (id) => {
-        if (window.confirm('Do you want to remove?')) {
-            fetch(variables.API_URL+"jewelry/" + id, {
-                method: "DELETE"
-            }).then((res) => {
-                if(res.status === 400) {
-                    navigate('/jewelries?success=false');
-                }
-                else{
-                    navigate('/jewelries?success=true');
-                }
-                window.location.reload();
-            }).catch((err) => {
-                console.log(err.message)
-            })
-        }
-    }
-
     const Sellfunction = (item) => {
+        console.log(variables.API_URL+"sales/" + item.Id);
         if(item.Quantity < 1) {
             toast.error("Acest Produs nu este pe stoc!")  
             return;        
@@ -107,6 +91,12 @@ const Listing = () => {
         jewelrydatachange([...sortedArray]);
     }
 
+    const fetchRowDetails = (item) => {
+        var table = document.getElementById("topTable")
+        table.removeAttribute("hidden");
+        setDefaultObject(item);
+    }
+
     useEffect(() => {
         toastHandler(searchParams.get("success"));
         Promise.all([
@@ -137,6 +127,34 @@ const Listing = () => {
                     <br></br>
                     <Toaster/>
                     <br></br>
+                    <table id="topTable" hidden className="table table-striped table-bordered table-align">
+                        <thead className="bg-dark text-white">
+                            <tr>
+                                <td>Photo</td>
+                                <td>Shop Id</td>
+                                <td>Weight</td>
+                                <td>Type</td>
+                                <td>Quantity</td>
+                                <td>Price</td>
+                                <td>Optiuni</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src={variables.PHOTO_STORAGE+defaultObject?.PhotoFileName} border={1} height={50} width={50}></img></td>
+                                <td>{defaultObject?.ShopId}</td>
+                                <td>{defaultObject?.Weight}</td>
+                                <td>{defaultObject?.Type}</td>
+                                <td>{defaultObject?.Quantity}</td>
+                                <td>{defaultObject?.Price}</td>
+                                <td>
+                                    <button onClick={() => { LoadEdit(defaultObject?.Id) }} className="btn btn-primary">Edit</button>
+                                    {/* <button onClick={() => { Removefunction(defaultObject?.Id) }} className="btn btn-danger">Remove</button> */}
+                                    <button onClick={() => { Sellfunction(defaultObject) }} className="btn btn-success">Sell one</button>
+                                </td>
+                            </tr>   
+                        </tbody>
+                    </table>
                     <hr></hr>
                     <div style={{display:'flex',marginBottom:'20px',justifyContent:'space-evenly',width:'100%'}}>
                         <div className="col-lg-4" >
@@ -157,35 +175,28 @@ const Listing = () => {
                             </div>
                         </div>
                     </div>
-                    <table className="table table-bordered table-align">
+                    <table className="table table-striped table-bordered table-align">
                         <thead className="bg-dark text-white">
                             <tr>
                                 <td>Photo</td>
                                 <td>Shop Id</td>
-                                <td>Name</td>
                                 <td style={{cursor:"pointer"}} onClick={onWeightSort}>Weight</td>
                                 <td style={{cursor:"pointer"}} onClick={onTypeSort}>Type</td>
                                 <td style={{cursor:"pointer"}} onClick={onQuantitySort}>Quantity</td>
                                 <td style={{cursor:"pointer"}} onClick={onPriceSort}>Price</td>
-                                <td>Optiuni</td>
                             </tr>
                         </thead>
                         <tbody>
                             {jewelrydata &&
-                                jewelrydata.map(item => ((item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Name.toLowerCase().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
-                                    <tr key={item.Id}>
+                                jewelrydata.map(item => ((item.Quantity > 0) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Weight.toLowerCase().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
+                                    <tr onClick={()=>fetchRowDetails(item)} key={item.Id}>
                                         <td><img src={variables.PHOTO_STORAGE+item.PhotoFileName} border={1} height={50} width={50}></img></td>
                                         <td>{item.ShopId}</td>
-                                        <td>{item.Name}</td>
                                         <td>{item.Weight}</td>
                                         <td>{item.Type}</td>
                                         <td>{item.Quantity}</td>
                                         <td>{item.Price}</td>
-                                        <td>
-                                            <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Edit</button>
-                                            <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button>
-                                            <button onClick={() => { Sellfunction(item) }} className="btn btn-success">Sell one</button>
-                                        </td>
+
                                     </tr>
                                     : null
                                 ))
