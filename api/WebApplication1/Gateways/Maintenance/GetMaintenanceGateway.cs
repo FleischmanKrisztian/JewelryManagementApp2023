@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using JewelryManagement.Models;
 using System.Data;
 using System.Data.SqlClient;
 using JewelryManagement.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
-namespace JewelryManagement.Gateways.JewelryType
+namespace JewelryManagement.Gateways.Maintenance
 {
-    public class UpdateJewelryTypeGateway
+    public class GetMaintenanceGateway
     {
-        public void Update(Models.JewelryType jewelryType)
+        public JsonResult Get()
         {
             string query = @"
-                           update dbo.jewelryType
-                           set Name= @Name,
-                           PricePerG=@PricePerG
-                           where Id=@Id
-                           ";
+                            select Maintenance.*, Jewelry.ShopId, Jewelry.Weight, Jewelry.PhotoFilename, JewelryType.Name as Type
+							from dbo.Maintenance left join dbo.Jewelry on Maintenance.JewelryId = Jewelry.Id left join dbo.JewelryType on Jewelry.TypeId = JewelryType.Id
+                            "
+            ;
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");
@@ -24,15 +25,14 @@ namespace JewelryManagement.Gateways.JewelryType
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("Id", jewelryType.Id);
-                    myCommand.Parameters.AddWithValue("Name", jewelryType.Name);
-                    myCommand.Parameters.AddWithValue("PricePerG", jewelryType.PricePerG);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
                     myCon.Close();
                 }
             }
+
+            return new JsonResult(table);
         }
     }
 }

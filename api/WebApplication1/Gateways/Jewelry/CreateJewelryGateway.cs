@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using JewelryManagement.Utils;
 
@@ -10,8 +11,8 @@ namespace JewelryManagement.Gateways.Jewelry
         {
             string query = @"
                            insert into dbo.Jewelry
-                           (ShopId, Weight, TypeId,Quantity,Price, PhotoFileName, IsDeleted)
-                           values (@ShopId,@Weight,@TypeId,@Quantity,@Price, @PhotoFileName, 0)";
+                           (ShopId, Weight, TypeId ,Quantity, DateAdded, PhotoFileName, IsDeleted)
+                           values (@ShopId,@Weight,@TypeId,@Quantity,@DateAdded, @PhotoFileName, 0)";
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");
@@ -25,7 +26,7 @@ namespace JewelryManagement.Gateways.Jewelry
                     myCommand.Parameters.AddWithValue("@Weight", jewelry.Weight);
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);
-                    myCommand.Parameters.AddWithValue("@Price", jewelry.Price);
+                    myCommand.Parameters.AddWithValue("@DateAdded", DateTime.Now);
                     myCommand.Parameters.AddWithValue("@PhotoFileName", jewelry.PhotoFileName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);

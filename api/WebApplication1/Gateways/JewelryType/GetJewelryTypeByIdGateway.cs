@@ -11,7 +11,7 @@ namespace JewelryManagement.Gateways.JewelryType
         {
             string query = @"select JewelryType.*, SUM(Quantity) as Total_Quantity, Sum(Weight* Quantity) as Total_Weight
                              from dbo.JewelryType left join Jewelry on (JewelryType.Id = Jewelry.TypeId)
-                             where JewelryType.Id = @Id group by JewelryType.Id, JewelryType.Name";
+                             where JewelryType.Id = @Id group by JewelryType.Id, JewelryType.Name, JewelryType.PricePerG";
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");

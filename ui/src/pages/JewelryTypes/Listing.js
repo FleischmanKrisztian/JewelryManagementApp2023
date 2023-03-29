@@ -61,15 +61,17 @@ const Listing = () => {
                 <Toaster/>
                 <div className="card-body">
                     <div className="divbtn">
-                        <Link to="/jewelryTypes/create" className="btn btn-success">Add New (+)</Link>
+                        <Link to="/jewelryTypes/create" className="btn btn-success">Adaugă (+)</Link>
                     </div>
                     <table className="table table-bordered table-align">
                         <thead className="bg-dark text-white">
                             <tr>
-                                <td>Name</td>
-                                <td>Total_Quantity</td>
-                                <td>Total_Weight</td>
-                                {/* <td>Optiuni</td> */}
+                                <td>Nume</td>
+                                <td>Preţ per Gram</td>
+                                <td>Cantitate totală</td>
+                                <td>Greutate totală</td>
+                                <td>Preţ total</td>
+                                <td>Opţiuni</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,12 +80,14 @@ const Listing = () => {
                                 typedata.map(item => (
                                     <tr key={item.Id}>
                                         <td>{item.Name}</td>
+                                        <td>{item.PricePerG}</td>
                                         <td>{item.Total_Quantity ?? 0}</td>
-                                        <td>{item.Total_Weight ?? 0}</td>
-                                        {/* <td>
-                                            <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Edit</button>
-                                            <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button>
-                                        </td> */}
+                                        <td>{item.Total_Weight?.toFixed(2) ?? 0}</td>
+                                        <td>{(item.Total_Quantity * item.PricePerG).toFixed(2) ?? 0}</td>
+                                        <td>
+                                            <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Editează</button>
+                                            {/* <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button> */}
+                                        </td>
                                     </tr>
                                 ))
                             }

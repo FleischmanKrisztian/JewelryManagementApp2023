@@ -9,7 +9,7 @@ namespace JewelryManagement.Gateways.Jewelry
     {
         public float Get(int id)
         {
-            string query = @"select Jewelry.Price from dbo.Jewelry where Jewelry.Id = @Id";
+            string query = @"select sum(Jewelry.Weight * JewelryType.PricePerG) as PriceAtSale from dbo.Jewelry left join dbo.JewelryType On Jewelry.TypeId = JewelryType.Id where Jewelry.Id = @Id";
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");

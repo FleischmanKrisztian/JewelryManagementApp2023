@@ -1,20 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using JewelryManagement.Utils;
 
-namespace JewelryManagement.Gateways.JewelryType
+namespace JewelryManagement.Gateways.Maintenance
 {
-    public class UpdateJewelryTypeGateway
+    public class DeleteMaintenanceGateway
     {
-        public void Update(Models.JewelryType jewelryType)
+        public void Delete(int id)
         {
             string query = @"
-                           update dbo.jewelryType
-                           set Name= @Name,
-                           PricePerG=@PricePerG
-                           where Id=@Id
-                           ";
+                            delete from dbo.Maintenance
+                            where Id=@Id
+                            "
+            ;
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");
@@ -24,9 +22,7 @@ namespace JewelryManagement.Gateways.JewelryType
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("Id", jewelryType.Id);
-                    myCommand.Parameters.AddWithValue("Name", jewelryType.Name);
-                    myCommand.Parameters.AddWithValue("PricePerG", jewelryType.PricePerG);
+                    myCommand.Parameters.AddWithValue("@Id", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

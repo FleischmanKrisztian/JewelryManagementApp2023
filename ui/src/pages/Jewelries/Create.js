@@ -77,13 +77,13 @@ const JewelryCreate = () => {
                     <form className="container" onSubmit={handlesubmit}>
                         <div className="card" style={{"textAlign":"left"}}>
                             <div className="card-title">
-                                <h2>Creati model de bijuterie</h2>
+                                <h2>Creaţi model de bijuterie</h2>
                             </div>
                             <div className="card-body">
                                 <div className="row">
                                 <div className="col-lg-12">
                                     <div className="form-group">
-                                        <label>ShopId</label>
+                                        <label>Cod</label>
                                         <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
                                     </div>
                                 </div>
@@ -91,33 +91,26 @@ const JewelryCreate = () => {
                                         <div className="form-group">
                                             <label>Greutate</label>
                                             <input type={"number"} min={0} step={0.00001} required value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
-                                        {Weight.length===0 && validation2 && <span className="text-danger">Enter the Weight</span>}
+                                        {Weight.length===0 && validation2 && <span className="text-danger">Introduceţi Greutatea</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Tip De Bijuterie</label>
                                             <select defaultValue={""} required onBlur={e=>valchange3(true)} onChange={e=>typechange(e.target.value)} className="form-control">
-                                            <option disabled value={""}>Choose a Type</option>
+                                            <option disabled value={""}>Selectaţi Tipul</option>
                                                 {
-                                                    typeiddata.map(result=>(<option onChange={e=>typechange(e.target.value)} key={result.Id} value={result.Id}>{result.Name}</option>))
+                                                    typeiddata.map(result=>(<option key={result.Id} value={result.Id}>{result.Name}</option>))
                                                 }
                                             </select>
-                                            {TypeId==="" && validation3 && <span className="text-danger">Enter the Type</span>}
+                                            {TypeId==="" && validation3 && <span className="text-danger">Introduceţi Tipul</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
-                                            <label>Quantity</label>
+                                            <label>Cantitate</label>
                                             <input type={"number"} required min={1} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
-                                        {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>Price</label>
-                                            <input type={"number"} required min={0} step={0.00001} value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
-                                        {Price.length===0 && validation5 && <span className="text-danger">Enter the Price</span>}
+                                        {Quantity.length===0 && validation4 && <span className="text-danger">Introduceţi Cantitatea</span>}
                                         </div>
                                     </div>
                                     <div className="p-2 w-50 bd-highlight">
@@ -127,8 +120,8 @@ const JewelryCreate = () => {
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
-                                           <button className="btn btn-success" type="submit">Save</button>
-                                           <Link to="/Jewelries" className="btn btn-danger">Back</Link>
+                                           <button className="btn btn-success" type="submit">Salvaţi</button>
+                                           <Link to="/Jewelries" className="btn btn-danger">Înapoi</Link>
                                         </div>
                                     </div>
                                 </div>

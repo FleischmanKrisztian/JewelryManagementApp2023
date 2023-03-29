@@ -6,16 +6,15 @@ import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable'
 
 const Listing = () => {
-    const[salesdata, salesdatachange] = useState(null);
+    const[maintenancesdata, maintenancedatachange] = useState(null);
     const[typedata, typedatachange] = useState([]);
     const[typeFilter,valchange1]=useState("");
     const[generalFilter,valchange2]=useState("");
-    const[soldAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split(':')[0]+':00');
-    const[soldBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[weightSort,setWeightSort]=useState(false);
     const[typeSort,setTypeSort]=useState(false);
     const[dateSort,setDateSort]=useState(false);
-    const[priceSort,setPriceSort]=useState(false);
+    const[avizatAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split(':')[0]+':00');
+    const[avizatBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[searchParams] = useSearchParams();
     const[defaultObject,setDefaultObject] = useState(null);
     
@@ -23,7 +22,7 @@ const Listing = () => {
     
     function headRows() {
         return [
-          { number: 'Numar', shopid: 'Cod', price: 'Pret', date: 'Data vânzarii', type: 'Tip de Bijuterie', weight: 'Greutate' },
+          { number: 'Numar', shopid: 'Cod', date: 'Data avizarii', type: 'Tip de Bijuterie', weight: 'Greutate' },
         ]
       }
 
@@ -36,29 +35,19 @@ const Listing = () => {
           body.push({
             number: j,
             shopid: table.rows[j].cells[1].innerHTML,
-            price: table.rows[j].cells[2].innerHTML,
-            date: table.rows[j].cells[3].innerHTML,
-            type: table.rows[j].cells[4].innerHTML,
-            weight: table.rows[j].cells[5].innerHTML,
+            date: table.rows[j].cells[2].innerHTML,
+            type: table.rows[j].cells[3].innerHTML,
+            weight: table.rows[j].cells[4].innerHTML,
           })
         }      
         return body
-    }
-
-    function getTotalPrice(){
-        var table = document.getElementById("my-table"), sumVal = 0;   
-        for(var i = 1; i < table.rows.length; i++)
-        {
-            sumVal = sumVal + parseFloat(table.rows[i].cells[2].innerHTML);
-        }      
-        return sumVal.toFixed(2);
     }
 
     function getTotalWeight(){
         var table = document.getElementById("my-table"), sumVal = 0;      
         for(var i = 1; i < table.rows.length; i++)
         {
-            sumVal = sumVal + parseFloat(table.rows[i].cells[5].innerHTML);
+            sumVal = sumVal + parseFloat(table.rows[i].cells[4].innerHTML);
         }
         return sumVal.toFixed(2);
     }
@@ -66,27 +55,27 @@ const Listing = () => {
     const downloadPdf=()=>{
         const doc = new jsPDF();
         var finalY = 0
-        doc.text('Intervalul Vânzarilor: ' + soldAfter.toLocaleString() + ' - ' + soldBefore.toLocaleString(), 40, finalY + 15)
+        doc.text('Intervalul Avizarilor: ' + avizatAfter.toLocaleString() + ' - ' + avizatBefore.toLocaleString(), 40, finalY + 15)
         doc.autoTable({
             startY: finalY + 20,
             head: headRows(),
             body: bodyRows(),
-            foot: [['Total:', '',getTotalPrice(),'','',getTotalWeight()]],
+            foot: [['Total:', '','','',getTotalWeight()]],
         })
-        doc.save('Sales-' + new Date().toLocaleDateString().split('Z')[0] + '.pdf');
+        doc.save('Avizari-' + new Date().toLocaleDateString().split('Z')[0] + '.pdf');
     }
 
-    const Removefunction = (saleid,jewelryid) => {
+    const Removefunction = (maintenanceid,jewelryid) => {
         console.log(typeFilter);
-        if (window.confirm('Sigur vreti să faceţi retur?')) {
-            fetch(variables.API_URL+"sales/" + saleid + "/" + jewelryid, {
+        if (window.confirm('Sigur vreti să repuneţi In stoc?')) {
+            fetch(variables.API_URL+"Maintenance/" + maintenanceid + "/" + jewelryid, {
                 method: "DELETE"
             }).then((res) => {
                 if(res.status === 400) {
-                    navigate('/sales?success=false');
+                    navigate('/maintenance?success=false');
                 }
                 else{
-                    navigate('/sales?success=true');
+                    navigate('/maintenance?success=true');
                 }
                 window.location.reload();
             }).catch((err) => {
@@ -103,38 +92,29 @@ const Listing = () => {
 
     const onWeightSort = () =>{
         const condition = weightSort?1:-1;
-        const sortedArray = salesdata?.sort((a,b)=>{
+        const sortedArray = maintenancesdata?.sort((a,b)=>{
             return a.Weight>b.Weight? condition:-condition
         })  
         setWeightSort(!weightSort);
-        salesdatachange([...sortedArray]);
+        maintenancedatachange([...sortedArray]);
     }
     
     const onTypeSort = () =>{
         const condition = typeSort?1:-1;
-        const sortedArray = salesdata?.sort((a,b)=>{
+        const sortedArray = maintenancesdata?.sort((a,b)=>{
             return a.Type>b.Type? condition:-condition
         })  
         setTypeSort(!typeSort);
-        salesdatachange([...sortedArray]);
+        maintenancedatachange([...sortedArray]);
     }
     
     const onDateSort = () =>{
         const condition = dateSort?1:-1;
-        const sortedArray = salesdata?.sort((a,b)=>{
+        const sortedArray = maintenancesdata?.sort((a,b)=>{
             return a.DateOfTransaction>b.DateOfTransaction? condition:-condition
         })  
         setDateSort(!dateSort);
-        salesdatachange([...sortedArray]);
-    }
-    
-    const onPriceSort = () =>{
-        const condition = priceSort?1:-1;
-        const sortedArray = salesdata?.sort((a,b)=>{
-            return a.PriceAtSale>b.PriceAtSale? condition:-condition
-        })  
-        setPriceSort(!priceSort);
-        salesdatachange([...sortedArray]);
+        maintenancedatachange([...sortedArray]);
     }
 
     const toastHandler = (success) => {
@@ -143,7 +123,7 @@ const Listing = () => {
             return;
         }
         if(success === "true"){
-            toast.success("Retur cu Succes!");
+            toast.success("Repus cu Succes!");
         }
         else{
             toast.error("A apărut o eroare!");
@@ -153,19 +133,19 @@ const Listing = () => {
     useEffect(() => {
         toastHandler(searchParams.get("success"));
         Promise.all([
-          fetch(variables.API_URL+"sales"),
+          fetch(variables.API_URL+"maintenance"),
           fetch(variables.API_URL+"jewelrytype"),
         ])
-        .then(([salesDetails, typeDetails]) => 
-            Promise.all([salesDetails.json(), typeDetails.json()])
+        .then(([maintenanceDetails, typeDetails]) => 
+            Promise.all([maintenanceDetails.json(), typeDetails.json()])
         )
-        .then(([salesData, typeData]) => {
+        .then(([maintenancesData, typeData]) => {
             const condition = dateSort?1:-1;
-            const sortedArray = salesData?.sort((a,b)=>{
+            const sortedArray = maintenancesData?.sort((a,b)=>{
                 return a.DateOfTransaction>b.DateOfTransaction? condition:-condition
             })  
             setDateSort(!dateSort);
-            salesdatachange([...sortedArray]);
+            maintenancedatachange([...sortedArray]);
             typedatachange(typeData);
         }).catch((err) => {
             console.log(err.message);
@@ -176,7 +156,7 @@ const Listing = () => {
         <div className="container">
             <div className="card">
                 <div className="card-title">
-                    <h2>Vânzări</h2>
+                    <h2>Avize</h2>
                 </div>
                 <div className="card-body">
                     <table id="topTable" hidden className="table table-striped table-bordered table-align">
@@ -184,8 +164,7 @@ const Listing = () => {
                             <tr>
                                 <td>Photo</td>
                                 <td>Cod</td>
-                                <td>Preţ</td>
-                                <td>Data vânzării</td>
+                                <td>Data avizării</td>
                                 <td>Tip</td>
                                 <td>Greutate</td>
                                 <td>Opţiuni</td>
@@ -195,12 +174,11 @@ const Listing = () => {
                             <tr key={defaultObject?.Id}>
                                 <td><img src={variables.PHOTO_URL+defaultObject?.PhotoFilename} border={1} height={50} width={50}></img></td>
                                 <td>{defaultObject?.ShopId}</td>
-                                <td>{defaultObject?.PriceAtSale}</td>
                                 <td>{new Date(defaultObject?.DateOfTransaction).toLocaleString('ro-RO')}</td>
                                 <td>{defaultObject?.Type}</td>
                                 <td>{defaultObject?.Weight}</td>
                                 <td>
-                                    <button onClick={() => { Removefunction(defaultObject?.Id,defaultObject?.JewelryId) }} className="btn btn-danger">Retur</button>
+                                    <button onClick={() => { Removefunction(defaultObject?.Id,defaultObject?.JewelryId) }} className="btn btn-danger">Repune în Stoc</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -208,7 +186,7 @@ const Listing = () => {
                     <hr></hr>
                     <Toaster/>
                     <div style={{display:'flex',marginBottom:'20px',justifyContent:'space-evenly',width:'100%'}}>
-                        <div className="col-lg-4" >
+                        <div className="col-lg-4">
                             <div className="form-group">
                                 <label>Tip De Bijuterie:</label>
                                 <select defaultValue={""} onChange={e=>valchange1(e.target.value)} className="form-control">
@@ -217,15 +195,15 @@ const Listing = () => {
                                         typedata.map(result=>(<option onChange={e=>valchange1(e.target.value)} key={result.Id} value={result.Name}>{result.Name}</option>))
                                     }
                                 </select>
-                                <label>Vândut după:</label>
-                                <input type={"datetime-local"}value={soldAfter} onChange={e=>valchange3(e.target.value)} className="form-control"></input>
+                                <label>Avizat După:</label>
+                                <input type={"datetime-local"}value={avizatAfter} onChange={e=>valchange3(e.target.value)} className="form-control"></input>
                             </div>
                         </div>
                         <div className="col-lg-4">
-                            <label>Caută:</label>
+                            <label>Cauta:</label>
                             <input value={generalFilter} onChange={e=>valchange2(e.target.value)} className="form-control"></input>
-                            <label>Vândut inainte de:</label>
-                            <input type={"datetime-local"} value={soldBefore} onChange={e=>valchange4(e.target.value)} className="form-control"></input>
+                            <label>Avizat înainte de:</label>
+                            <input type={"datetime-local"} value={avizatBefore} onChange={e=>valchange4(e.target.value)} className="form-control"></input>
                         </div>
                     </div>
                     <button className="btn btn-primary" style={{marginBottom:'20px'}} onClick={downloadPdf}>PDF</button>
@@ -234,19 +212,17 @@ const Listing = () => {
                             <tr>
                                 <td>Photo</td>
                                 <td>Cod</td>
-                                <td style={{cursor:"pointer"}} onClick={onPriceSort}>Preţ</td>
-                                <td style={{cursor:"pointer"}} onClick={onDateSort}>Data vânzării</td>
+                                <td style={{cursor:"pointer"}} onClick={onDateSort}>Data avizării</td>
                                 <td style={{cursor:"pointer"}} onClick={onTypeSort}>Tip</td>
                                 <td style={{cursor:"pointer"}} onClick={onWeightSort}>Greutate</td>
                             </tr>
                         </thead>
                         <tbody>
-                            {salesdata &&
-                                salesdata.map(item => ((new Date(soldAfter) < new Date(item.DateOfTransaction) && new Date(soldBefore) > new Date(item.DateOfTransaction)) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Weight.toString().includes(generalFilter.toLowerCase()) || item.PriceAtSale.toString().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
+                            {maintenancesdata &&
+                                maintenancesdata.map(item => ((new Date(avizatAfter) < new Date(item.DateOfTransaction) && new Date(avizatBefore) > new Date(item.DateOfTransaction)) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
                                     <tr onClick={()=>fetchRowDetails(item)} key={item.Id}>
                                         <td><img src={variables.PHOTO_URL+item.PhotoFilename} border={1} height={50} width={50}></img></td>
                                         <td>{item.ShopId}</td>
-                                        <td>{item.PriceAtSale.toFixed(2)}</td>
                                         <td>{new Date(item.DateOfTransaction).toLocaleString('ro-RO')}</td>
                                         <td>{item.Type}</td>
                                         <td>{item.Weight}</td>

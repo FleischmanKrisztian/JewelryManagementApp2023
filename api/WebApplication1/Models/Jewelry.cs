@@ -1,4 +1,6 @@
-﻿namespace JewelryManagement.Models
+﻿using System;
+
+namespace JewelryManagement.Models
 {
     public class Jewelry
     {
@@ -11,8 +13,6 @@
         public int TypeId { get; set; }
 
         public int Quantity { get; set; }
-
-        public float Price { get; set; }
 
         public string PhotoFileName { get; set; }
     }

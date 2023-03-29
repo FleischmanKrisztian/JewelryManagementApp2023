@@ -16,3 +16,4 @@
 /api/WebApplication1/JewelryManagement.csproj.user
 /api/DatabaseManager/Versioning.csproj.user
 *.bak
+/ui/build

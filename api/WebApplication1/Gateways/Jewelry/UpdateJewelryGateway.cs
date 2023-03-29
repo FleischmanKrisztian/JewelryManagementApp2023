@@ -14,7 +14,6 @@ namespace JewelryManagement.Gateways.Jewelry
                             Weight=@Weight,
                             TypeId=@TypeId,
                             Quantity=@Quantity,
-                            Price=@Price,
                             PhotoFileName=@PhotoFileName
                             where Id=@Id
                             ";
@@ -32,7 +31,6 @@ namespace JewelryManagement.Gateways.Jewelry
                     myCommand.Parameters.AddWithValue("@Weight", jewelry.Weight);
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);
-                    myCommand.Parameters.AddWithValue("@Price", jewelry.Price);
                     myCommand.Parameters.AddWithValue("@PhotoFileName", jewelry.PhotoFileName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);

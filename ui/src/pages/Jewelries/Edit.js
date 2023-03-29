@@ -5,7 +5,7 @@ import {variables} from '../../Variables';
 const JewelryEdit = () => {
     const { jewelryid } = useParams();
     const[Typedata, typedatachange] = useState([]);
-    const PhotoPath = variables.PHOTO_STORAGE;
+    const PhotoPath = variables.PHOTO_URL;
 
 
     useEffect(() => {
@@ -22,7 +22,6 @@ const JewelryEdit = () => {
             weightchange(jewelryData[0].Weight);
             typechange(jewelryData[0].TypeId);
             quantitychange(jewelryData[0].Quantity);
-            pricechange(jewelryData[0].Price);
             photochange(jewelryData[0].PhotoFilename);
             typedatachange(typeData);
         }).catch((err) => {
@@ -35,7 +34,6 @@ const JewelryEdit = () => {
     const[Weight,weightchange]=useState("");
     const[TypeId,typechange]=useState("");
     const[Quantity,quantitychange]=useState("");
-    const[Price,pricechange]=useState("");
     const[PhotoFileName,photochange]=useState("default.png");
 
     const[validation2,valchange2]=useState(false);
@@ -66,7 +64,7 @@ const JewelryEdit = () => {
 
     const handlesubmit=(e)=>{
       e.preventDefault();
-      const jewelryData={Id,ShopId,Weight,TypeId,Quantity,Price,PhotoFileName};
+      const jewelryData={Id,ShopId,Weight,TypeId,Quantity,PhotoFileName};
       
       fetch(variables.API_URL+"jewelry",{
         method:"PUT",
@@ -99,7 +97,7 @@ const JewelryEdit = () => {
                                 <div className="row">
                                 <div className="col-lg-12">
                                     <div className="form-group">
-                                        <label>ShopId</label>
+                                        <label>Cod</label>
                                         <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
                                     </div>
                                 </div>
@@ -107,33 +105,26 @@ const JewelryEdit = () => {
                                         <div className="form-group">
                                             <label>Greutate</label>
                                             <input type={"number"} required  min={0} step={0.00001} value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
-                                        {Weight.length===0 && validation2 && <span className="text-danger">Enter the Weight</span>}
+                                        {Weight.length===0 && validation2 && <span className="text-danger">Introduceţi Greutatea</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Tip De Bijuterie</label>
                                             <select value={TypeId} required onBlur={e=>valchange3(true)} onChange={e=>typechange(e.target.value)} className="form-control">
-                                            <option disabled value={""}>Choose a Type</option>
+                                            <option disabled value={""}>Selectaţi Tipul</option>
                                                 {
                                                     Typedata.map(result=>(<option onChange={e=>typechange(e.target.value)} key={result.Id} value={result.Id}>{result.Name}</option>))
                                                 }
                                             </select>
-                                            {TypeId==="" && validation3 && <span className="text-danger">Enter the Type</span>}
+                                            {TypeId==="" && validation3 && <span className="text-danger">Introduceţi Tipul</span>}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
-                                            <label>Quantity</label>
+                                            <label>Cantitate</label>
                                             <input type={"number"} required  min={1} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
-                                        {Quantity.length===0 && validation4 && <span className="text-danger">Enter the Quantity</span>}
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>Price</label>
-                                            <input type={"number"} required min={0} step={0.00001} value={Price} onBlur={e=>valchange5(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
-                                        {Price.length===0 && validation5 && <span className="text-danger">Enter the Price</span>}
+                                        {Quantity.length===0 && validation4 && <span className="text-danger">Introduceţi Cantitatea</span>}
                                         </div>
                                     </div>
                                     <div className="p-2 w-50 bd-highlight">
@@ -143,8 +134,8 @@ const JewelryEdit = () => {
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
-                                           <button className="btn btn-success" type="submit">Save</button>
-                                           <Link to="/Jewelries" className="btn btn-danger">Back</Link>
+                                           <button className="btn btn-success" type="submit">Salvaţi</button>
+                                           <Link to="/Jewelries" className="btn btn-danger">Înapoi</Link>
                                         </div>
                                     </div>
                                 </div>

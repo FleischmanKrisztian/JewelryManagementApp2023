@@ -4,12 +4,13 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <Link to="/Jewelries" className="site-title">
-        Numele Companiei
+        Biju Products
       </Link>
       <ul>
-        <CustomLink to="/Jewelries">Bijuterii</CustomLink>
+        <CustomLink to="/Jewelries">Stoc</CustomLink>
         <CustomLink to="/Jewelrytypes">Tipuri de Bijuterii</CustomLink>
-        <CustomLink to="/Sales">Vanzari</CustomLink>
+        <CustomLink to="/Sales">Vânzări</CustomLink>
+        <CustomLink to="/Maintenance">Avize</CustomLink>
         <CustomLink to="/Admin">Admin</CustomLink>
       </ul>
     </nav>
