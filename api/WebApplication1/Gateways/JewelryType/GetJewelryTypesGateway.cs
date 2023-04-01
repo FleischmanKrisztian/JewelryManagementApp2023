@@ -10,9 +10,9 @@ namespace JewelryManagement.Gateways.JewelryType
     {
         public JsonResult Get()
         {
-            string query = @"select JewelryType.*, SUM(Quantity) as Total_Quantity, Sum(Weight* Quantity) as Total_Weight
+            string query = @"select JewelryType.*, SUM(Quantity) as Total_Quantity, Sum(Weight* Quantity) as Total_Weight, sum(Jewelry.Price*Jewelry.Quantity) as Price
                              from dbo.JewelryType left join Jewelry on (JewelryType.Id = Jewelry.TypeId)
-                             group by JewelryType.Id, JewelryType.Name, JewelryType.PricePerG";
+                             group by JewelryType.Id, JewelryType.Name, JewelryType.IsUnique, JewelryType.PricePerG";
 
             DataTable table = new DataTable();
             string sqlDataSource = Config.Get("ConnectionStrings:Connection");

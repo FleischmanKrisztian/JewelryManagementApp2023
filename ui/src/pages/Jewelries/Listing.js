@@ -184,6 +184,19 @@ const Listing = () => {
           });
       }, []);
 
+      const renderPrice =(item) =>{
+        if(item === undefined || item === null){
+            return;
+        }
+        if(item.IsUnique){
+            return (item.PricePerG * item.Weight).toFixed(2);
+        }
+        else{
+            return  (item.Price).toFixed(2);
+        }
+
+      }
+
     return (
         <div className="container">
             <div className="card">
@@ -214,10 +227,10 @@ const Listing = () => {
                             <tr>
                                 <td><img src={variables.PHOTO_URL+defaultObject?.PhotoFileName} border={1} height={50} width={50}></img></td>
                                 <td>{defaultObject?.ShopId}</td>
-                                <td>{(defaultObject?.Total_Quantity * defaultObject?.PricePerG).toFixed(2)}</td>
+                                <td>{defaultObject?.Weight}</td>
                                 <td>{defaultObject?.Type}</td>
                                 <td>{defaultObject?.Quantity}</td>
-                                <td>{(defaultObject?.PricePerG * defaultObject?.Weight).toFixed(2)}</td>
+                                <td>{renderPrice(defaultObject)}</td>
                                 <td>{new Date(defaultObject?.DateAdded).toLocaleString('ro-RO')}</td>
                                 <td>
                                     <button onClick={() => { LoadEdit(defaultObject?.Id) }} className="btn btn-primary">Editează</button>
@@ -273,7 +286,8 @@ const Listing = () => {
                                         <td>{item.Weight}</td>
                                         <td>{item.Type}</td>
                                         <td>{item.Quantity}</td>
-                                        <td>{(item.PricePerG * item.Weight).toFixed(2)}</td>
+                                        {/* <td>{(item.PricePerG * item.Weight).toFixed(2)}</td> */}
+                                        <td>{renderPrice(item)}</td>
                                         <td>{new Date(item.DateAdded).toLocaleString('ro-RO')}</td>
                                     </tr>
                                     : null

@@ -4,6 +4,7 @@ import {variables} from '../../Variables';
 
 const TypeCreate = () => {
     const[Name,namechange]=useState("");
+    const[IsUnique,IsUniquechange]=useState(true);
     const[PricePerG,pricechange]=useState("");
     const[validationName,valchange1]=useState(false);
     const[validationPrice,valchange2]=useState(false);
@@ -13,7 +14,7 @@ const TypeCreate = () => {
 
     const handlesubmit=(e)=>{
       e.preventDefault();
-      const typedata={Name,PricePerG};
+      const typedata={Name,IsUnique,PricePerG};
       
       fetch(variables.API_URL+"jewelrytype",{
         method:"POST",
@@ -31,6 +32,19 @@ const TypeCreate = () => {
       })
     }
 
+    const pegramchange =()=>{
+        IsUniquechange(true);
+        var pricePerGDiv = document.getElementById("PretPerG");
+        pricePerGDiv.style.display = "block";
+    }
+
+    const pebucatachange =()=>{
+        pricechange(0);
+        IsUniquechange(false);
+        var pricePerGDiv = document.getElementById("PretPerG");
+        pricePerGDiv.style.display = "none";
+    }
+
     return (
         <div>
             <div className="row">
@@ -42,17 +56,28 @@ const TypeCreate = () => {
                             </div>
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-lg-12">
+                                    <div className="form-group" style={{marginBottom:'20px'}}>
                                         <div className="form-group">
                                             <label>Nume</label>
                                             <input required value={Name} onMouseDown={e=>valchange1(true)} onChange={e=>namechange(e.target.value)} className="form-control"></input>
                                         {Name.length===0 && validationName && <span className="text-danger">Introduceţi Numele</span>}
                                         </div>
                                     </div>
-                                    <div className="col-lg-12">
+                                    <div className="form-group" style={{marginBottom:'20px'}}>
+                                        <div className="form-group">
+                                            <label>Se vinde</label>
+                                            <br></br>
+                                            <div>
+                                                <input type="radio" name="test" id="pegram" value="true" onChange={e=>pegramchange()} /> Pe gram
+                                                <br></br>
+                                                <input type="radio" name="test" id="pebucata" value="false" onChange={e=>pebucatachange()} /> Pe bucata
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12" id="PretPerG" >
                                         <div className="form-group">
                                             <label>Preţ per Gram</label>
-                                            <input type={"number"} required min={0} step={0.00001} value={PricePerG} onBlur={e=>valchange2(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
+                                            <input type={"number"} min={0} required step={0.00001} value={PricePerG} onBlur={e=>valchange2(true)} onChange={e=>pricechange(e.target.value)} className="form-control"></input>
                                         {PricePerG.length===0 && validationPrice && <span className="text-danger">Introduceţi Preţul per Gram</span>}
                                         </div>
                                     </div>

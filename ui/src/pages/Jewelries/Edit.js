@@ -7,6 +7,21 @@ const JewelryEdit = () => {
     const[Typedata, typedatachange] = useState([]);
     const PhotoPath = variables.PHOTO_URL;
 
+    const[Id,idchange]=useState("");
+    const[ShopId,shopidchange]=useState("");
+    const[Weight,weightchange]=useState("");
+    const[TypeId,typechange]=useState("");
+    const[Quantity,quantitychange]=useState("");
+    const[Price,pricechange]=useState("");
+    const[IsUnique,uniquechange]=useState(true);
+    const[PhotoFileName,photochange]=useState("default.png");
+
+    const[validation2,valchange2]=useState(false);
+    const[validation3,valchange3]=useState(false);
+    const[validation4,valchange4]=useState(false);
+
+    const navigate=useNavigate();
+
 
     useEffect(() => {
         Promise.all([
@@ -22,26 +37,18 @@ const JewelryEdit = () => {
             weightchange(jewelryData[0].Weight);
             typechange(jewelryData[0].TypeId);
             quantitychange(jewelryData[0].Quantity);
+            uniquechange(jewelryData[0].IsUnique);
             photochange(jewelryData[0].PhotoFilename);
+            updatePriceField();
             typedatachange(typeData);
+            setTimeout(() => {
+                typechangefunc(jewelryData[0].TypeId);
+                pricechange(jewelryData[0].Price);
+            }, 1000);
         }).catch((err) => {
             console.log(err.message);
-          });
-      }, []);
-
-    const[Id,idchange]=useState("");
-    const[ShopId,shopidchange]=useState("");
-    const[Weight,weightchange]=useState("");
-    const[TypeId,typechange]=useState("");
-    const[Quantity,quantitychange]=useState("");
-    const[PhotoFileName,photochange]=useState("default.png");
-
-    const[validation2,valchange2]=useState(false);
-    const[validation3,valchange3]=useState(false);
-    const[validation4,valchange4]=useState(false);
-    const[validation5,valchange5]=useState(false);
-
-    const navigate=useNavigate();
+        });
+    }, []);
 
     const filechange=(e)=>{
         imageUpload(e);
@@ -64,7 +71,7 @@ const JewelryEdit = () => {
 
     const handlesubmit=(e)=>{
       e.preventDefault();
-      const jewelryData={Id,ShopId,Weight,TypeId,Quantity,PhotoFileName};
+      const jewelryData={Id,ShopId,Weight,TypeId,Price,Quantity,PhotoFileName,IsUnique};
       
       fetch(variables.API_URL+"jewelry",{
         method:"PUT",
@@ -82,46 +89,94 @@ const JewelryEdit = () => {
       })
     }
 
+    function updatePriceField() {
+        const weightValue = document.getElementById("weightinput").value;
+        if(weightValue.length < 1){
+            return;
+        }
+        const dropdownOption = document.getElementById("dropdowninput");
+        const pricePerG = dropdownOption.options[dropdownOption.selectedIndex].getAttribute("priceperg");
+        pricechange(parseFloat(weightValue)*parseFloat(pricePerG).toFixed(2).toString());
+    }
+
+    const typechangefunc=(e)=>{
+        typechange(e);
+        const dropdownOption = document.getElementById("dropdowninput");
+        const isUnique = dropdownOption.options[dropdownOption.selectedIndex].getAttribute("isunique");
+        var isTrueSet = (isUnique === 'true');
+        var quantityDiv = document.getElementById("quantityDiv");
+        var weightDiv = document.getElementById("weightDiv");
+        var priceDiv = document.getElementById("priceDiv");
+        var priceInput = document.getElementById("priceInput");
+        if(isTrueSet)
+        {       
+            quantityDiv.style.display = "none";
+            weightDiv.style.display = "block";
+            priceDiv.style.display = "block";
+            priceInput.setAttribute("disabled", true);
+            quantitychange(1);
+            uniquechange(true);
+        }
+        else
+        {
+            quantityDiv.style.display = "block";
+            weightDiv.style.display = "none";
+            priceDiv.style.display = "block";
+            priceInput.removeAttribute("disabled");
+            uniquechange(false);      
+        }
+        updatePriceField();
+    }
+
+    const weightchangefunc=(e)=>{
+        weightchange(e);
+        updatePriceField();
+    }
+
     return (
         <div>
-
             <div className="row">
                 <div className="offset-lg-3 col-lg-6">
                     <form className="container" onSubmit={handlesubmit}>
-
                         <div className="card" style={{"textAlign":"left"}}>
                             <div className="card-title">
                                 <h2>Editeaza Tip de bijuterie</h2>
                             </div>
                             <div className="card-body">
                                 <div className="row">
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label>Cod</label>
-                                        <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
-                                    </div>
-                                </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
-                                            <label>Greutate</label>
-                                            <input type={"number"} required  min={0} step={0.00001} value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchange(e.target.value)} className="form-control"></input>
-                                        {Weight.length===0 && validation2 && <span className="text-danger">Introduceţi Greutatea</span>}
+                                            <label>Cod</label>
+                                            <input value={ShopId} onChange={e=>shopidchange(e.target.value)} className="form-control"></input>
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>Tip De Bijuterie</label>
-                                            <select value={TypeId} required onBlur={e=>valchange3(true)} onChange={e=>typechange(e.target.value)} className="form-control">
+                                            <select  id="dropdowninput" value={TypeId} required onBlur={e=>valchange3(true)} onChange={e=>typechangefunc(e.target.value)} className="form-control">
                                             <option disabled value={""}>Selectaţi Tipul</option>
                                                 {
-                                                    Typedata.map(result=>(<option onChange={e=>typechange(e.target.value)} key={result.Id} value={result.Id}>{result.Name}</option>))
+                                                    Typedata.map(result=>(<option key={result.Id} onChange={e=>typechange(e.target.value)} priceperg={result.PricePerG} isunique={result.IsUnique.toString()} value={result.Id}>{result.Name}</option>))
                                                 }
                                             </select>
                                             {TypeId==="" && validation3 && <span className="text-danger">Introduceţi Tipul</span>}
                                         </div>
                                     </div>
-                                    <div className="col-lg-12">
+                                    <div className="col-lg-12" id="weightDiv" style={{"display":"none"}}>
                                         <div className="form-group">
+                                            <label>Greutate</label>
+                                            <input id="weightinput" type={"number"} required  min={0} step={0.00001} value={Weight} onBlur={e=>valchange2(true)} onChange={e=>weightchangefunc(e.target.value)} className="form-control"></input>
+                                        {Weight.length===0 && validation2 && <span className="text-danger">Introduceţi Greutatea</span>}
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12" id="priceDiv" style={{"display":"none"}}>
+                                        <div className="form-group">
+                                            <label>Pret</label>
+                                            <input id="priceInput" type={"number"} min={1} step={0.00001} value={Price} onChange={e=>pricechange(e.target.value)} disabled className="form-control"></input>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12">
+                                        <div className="form-group" id="quantityDiv" style={{"display":"none"}}>
                                             <label>Cantitate</label>
                                             <input type={"number"} required  min={1} value={Quantity} onBlur={e=>valchange4(true)} onChange={e=>quantitychange(e.target.value)} className="form-control"></input>
                                         {Quantity.length===0 && validation4 && <span className="text-danger">Introduceţi Cantitatea</span>}

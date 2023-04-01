@@ -11,6 +11,8 @@ namespace JewelryManagement.Models
 
         public string Name { get; set; }
 
+        public bool IsUnique { get; set; }
+
         public float PricePerG { get; set; }
 
     }

@@ -8,13 +8,22 @@ namespace JewelryManagement.Gateways.Jewelry
     {
         public void Update(Models.Jewelry jewelry)
         {
+
+            var unique = 0;
+
+            if (jewelry.IsUnique)
+            {
+                unique = 1;
+            }
             string query = @"
                            update dbo.Jewelry
                            set ShopId=@ShopId,
                             Weight=@Weight,
                             TypeId=@TypeId,
+                            Price=@Price,
                             Quantity=@Quantity,
-                            PhotoFileName=@PhotoFileName
+                            PhotoFileName=@PhotoFileName,
+                            IsUnique=@IsUnique
                             where Id=@Id
                             ";
 
@@ -30,8 +39,10 @@ namespace JewelryManagement.Gateways.Jewelry
                     myCommand.Parameters.AddWithValue("@ShopId", jewelry.ShopId);
                     myCommand.Parameters.AddWithValue("@Weight", jewelry.Weight);
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
+                    myCommand.Parameters.AddWithValue("@Price", jewelry.Price);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);
                     myCommand.Parameters.AddWithValue("@PhotoFileName", jewelry.PhotoFileName);
+                    myCommand.Parameters.AddWithValue("@IsUnique", unique);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

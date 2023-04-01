@@ -12,8 +12,12 @@ namespace JewelryManagement.Models
 
         public int TypeId { get; set; }
 
+        public float Price { get; set; }
+
         public int Quantity { get; set; }
 
         public string PhotoFileName { get; set; }
+
+        public bool IsUnique { get; set; }
     }
 }

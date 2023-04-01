@@ -16,6 +16,15 @@ namespace JewelryManagement.Contexts.Jewelry
         {
             try
             {
+                if (jewelry.IsUnique)
+                {
+                    jewelry.Price = 0;
+                    jewelry.Quantity = 1;
+                }
+                else
+                {
+                    jewelry.Weight = 0;
+                }
                 updateJewelryGateway.Update(jewelry);
 
                 return new JsonResult("Updated Successfully");

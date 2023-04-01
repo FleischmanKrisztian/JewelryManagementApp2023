@@ -11,7 +11,7 @@ namespace JewelryManagement.Gateways.JewelryType
         {
             string query = @"
                            insert into dbo.JewelryType
-                           values (@Name, @PricePerG)
+                           values (@Name,@IsUnique,@PricePerG)
                             ";
 
             DataTable table = new DataTable();
@@ -23,6 +23,7 @@ namespace JewelryManagement.Gateways.JewelryType
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("Name", jewelryType.Name);
+                    myCommand.Parameters.AddWithValue("IsUnique", jewelryType.IsUnique);
                     myCommand.Parameters.AddWithValue("PricePerG", jewelryType.PricePerG);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);

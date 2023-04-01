@@ -11,6 +11,7 @@ const Listing = () => {
     const LoadEdit = (id) => {
         navigate("/jewelrytypes/edit/" + id);
     }
+
     const Removefunction = (id) => {
         if (window.confirm('Do you want to remove?')) {
             fetch(variables.API_URL+"jewelrytype/" + id, {
@@ -39,6 +40,32 @@ const Listing = () => {
         }
         else{
             toast.error("A aparut o eroare!");
+        }
+    }
+
+    const SoldAs = (value) => {
+        if(value){
+            return "Per Gram";
+        }
+        else{
+            return "Per Bucata";
+        }
+    }
+    const PriceAs = (value) => {
+        if(value.IsUnique){
+            return (value.Total_Weight * value.PricePerG).toFixed(2) ?? '-';
+        }
+        else{
+            return value.Price.toFixed(2);
+        }
+    }    
+
+    const renderButton = (item) => {
+        if(item.IsUnique){
+            return <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Editează</button>;    
+        }
+        else{
+            return <button disabled onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Editează</button>; 
         }
     }
 
@@ -71,6 +98,7 @@ const Listing = () => {
                                 <td>Cantitate totală</td>
                                 <td>Greutate totală</td>
                                 <td>Preţ total</td>
+                                <td>Se vinde per Gram</td>
                                 <td>Opţiuni</td>
                             </tr>
                         </thead>
@@ -80,12 +108,13 @@ const Listing = () => {
                                 typedata.map(item => (
                                     <tr key={item.Id}>
                                         <td>{item.Name}</td>
-                                        <td>{item.PricePerG}</td>
-                                        <td>{item.Total_Quantity ?? 0}</td>
-                                        <td>{item.Total_Weight?.toFixed(2) ?? 0}</td>
-                                        <td>{(item.Total_Quantity * item.PricePerG).toFixed(2) ?? 0}</td>
+                                        <td>{item.PricePerG ?? '-'}</td>
+                                        <td>{item.Total_Quantity ?? '-'}</td>
+                                        <td>{item.Total_Weight?.toFixed(2) ?? '-'}</td>
+                                        <td>{PriceAs(item)}</td>
+                                        <td>{SoldAs(item.IsUnique)}</td>
                                         <td>
-                                            <button onClick={() => { LoadEdit(item.Id) }} className="btn btn-primary">Editează</button>
+                                            {renderButton(item)}
                                             {/* <button onClick={() => { Removefunction(item.Id) }} className="btn btn-danger">Remove</button> */}
                                         </td>
                                     </tr>
