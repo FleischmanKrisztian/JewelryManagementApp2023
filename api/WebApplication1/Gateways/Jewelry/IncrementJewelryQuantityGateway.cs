@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using JewelryManagement.Utils;
 
@@ -10,7 +11,9 @@ namespace JewelryManagement.Gateways.Jewelry
         {
             string query = @"
                             UPDATE dbo.Jewelry
-                            SET Quantity = Quantity + 1
+                            SET
+                            Quantity = Quantity + 1,
+                            DateAdded = @DateAdded
                             WHERE Id = @Id;";
 
             DataTable table = new DataTable();
@@ -22,6 +25,7 @@ namespace JewelryManagement.Gateways.Jewelry
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("@Id", id);
+                    myCommand.Parameters.AddWithValue("@DateAdded", DateTime.Now);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);

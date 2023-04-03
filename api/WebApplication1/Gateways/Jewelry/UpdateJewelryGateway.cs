@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using JewelryManagement.Utils;
 
@@ -22,6 +23,7 @@ namespace JewelryManagement.Gateways.Jewelry
                             TypeId=@TypeId,
                             Price=@Price,
                             Quantity=@Quantity,
+                            DateAdded=@DateAdded,
                             PhotoFileName=@PhotoFileName,
                             IsUnique=@IsUnique
                             where Id=@Id
@@ -41,6 +43,7 @@ namespace JewelryManagement.Gateways.Jewelry
                     myCommand.Parameters.AddWithValue("@TypeId", jewelry.TypeId);
                     myCommand.Parameters.AddWithValue("@Price", jewelry.Price);
                     myCommand.Parameters.AddWithValue("@Quantity", jewelry.Quantity);
+                    myCommand.Parameters.AddWithValue("@DateAdded", DateTime.Now);
                     myCommand.Parameters.AddWithValue("@PhotoFileName", jewelry.PhotoFileName);
                     myCommand.Parameters.AddWithValue("@IsUnique", unique);
                     myReader = myCommand.ExecuteReader();

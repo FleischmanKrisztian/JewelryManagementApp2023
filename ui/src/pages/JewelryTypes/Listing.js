@@ -56,6 +56,8 @@ const Listing = () => {
             return (value.Total_Weight * value.PricePerG).toFixed(2) ?? '-';
         }
         else{
+            if(value.Price==null)
+                return parseFloat("0").toFixed(2);
             return value.Price.toFixed(2);
         }
     }    

@@ -13,7 +13,7 @@ const Listing = () => {
     const[weightSort,setWeightSort]=useState(false);
     const[typeSort,setTypeSort]=useState(false);
     const[dateSort,setDateSort]=useState(false);
-    const[avizatAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split(':')[0]+':00');
+    const[avizatAfter,valchange3]=useState(new Date("2023-01-01").toISOString().split(':')[0]+':00');
     const[avizatBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[searchParams] = useSearchParams();
     const[defaultObject,setDefaultObject] = useState(null);

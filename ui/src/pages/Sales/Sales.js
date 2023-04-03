@@ -10,7 +10,7 @@ const Listing = () => {
     const[typedata, typedatachange] = useState([]);
     const[typeFilter,valchange1]=useState("");
     const[generalFilter,valchange2]=useState("");
-    const[soldAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split(':')[0]+':00');
+    const[soldAfter,valchange3]=useState(new Date("2023-01-01").toISOString().split(':')[0]+':00');
     const[soldBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[weightSort,setWeightSort]=useState(false);
     const[typeSort,setTypeSort]=useState(false);

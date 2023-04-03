@@ -10,7 +10,7 @@ const Listing = () => {
     const[typedata, typedatachange] = useState([]);
     const[typeFilter,valchange1]=useState("");
     const[generalFilter,valchange2]=useState("");
-    const[addedAfter,valchange3]=useState(new Date(new Date().setDate(new Date().getDate()-1000)).toISOString().split(':')[0]+':00');
+    const[addedAfter,valchange3]=useState(new Date("2023-01-01").toISOString().split(':')[0]+':00');
     const[addedBefore,valchange4]=useState(new Date(new Date().setDate(new Date().getDate()+1)).toISOString().split(':')[0]+':00');
     const[weightSort,setWeightSort]=useState(false);
     const[typeSort,setTypeSort]=useState(false);
@@ -143,17 +143,34 @@ const Listing = () => {
         jewelrydatachange([...sortedArray]);
     }
     
-    const onPriceSort = () =>{
-        const condition = priceSort?1:-1;
-        const sortedArray = jewelrydata?.sort((a,b)=>{
-            return a.PricePerG*a.Weight>b.PricePerG*b.Weight? condition:-condition
-        })  
+    const onPriceSort = () => {
+        const condition = priceSort ? 1 : -1;
+        const sortedArray = jewelrydata?.sort((a, b) => {
+          if (a.IsUnique && b.IsUnique) {
+            return a.PricePerG * a.Weight > b.PricePerG * b.Weight
+              ? condition
+              : -condition;
+          } else if (a.IsUnique && !b.IsUnique) {
+            return a.PricePerG * a.Weight > b.Price
+              ? condition
+              : -condition;
+          } else if (!a.IsUnique && b.IsUnique) {
+            return a.Price > b.PricePerG * b.Weight
+              ? condition
+              : -condition;
+          }
+          else{
+            return a.Price > b.Price
+              ? condition
+              : -condition;
+          }
+        });
         setPriceSort(!priceSort);
         jewelrydatachange([...sortedArray]);
-    }
+      };
 
     const onDateSort = () =>{
-        const condition = priceSort?1:-1;
+        const condition = dateSort?1:-1;
         const sortedArray = jewelrydata?.sort((a,b)=>{
             return a.DateAdded>b.DateAdded? condition:-condition
         })  
@@ -279,14 +296,13 @@ const Listing = () => {
                         </thead>
                         <tbody>
                             {jewelrydata &&
-                                jewelrydata.map(item => ((new Date(addedAfter) < new Date(item.DateAdded) && new Date(addedBefore) > new Date(item.DateAdded)) && (item.Quantity > 0) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Weight.toString().includes(generalFilter.toLowerCase()) || item.Price.toString().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
+                                jewelrydata.map(item => ((new Date(addedAfter) < new Date(item.DateAdded) && new Date(addedBefore) > new Date(item.DateAdded)) && (item.Quantity > 0) && (item.Type === typeFilter || typeFilter==="") && (generalFilter==="" || item.Weight.toString().includes(generalFilter.toLowerCase()) || item.Price.toString().includes(generalFilter.toLowerCase())  || (item.PricePerG * item.Weight).toFixed(2).toString().includes(generalFilter.toLowerCase()) || item.ShopId.toLowerCase().includes(generalFilter.toLowerCase())) ?
                                     <tr onClick={()=>fetchRowDetails(item)} key={item.Id}>
                                         <td><img src={variables.PHOTO_URL+item.PhotoFileName} border={1} height={50} width={50}></img></td>
                                         <td>{item.ShopId}</td>
                                         <td>{item.Weight}</td>
                                         <td>{item.Type}</td>
                                         <td>{item.Quantity}</td>
-                                        {/* <td>{(item.PricePerG * item.Weight).toFixed(2)}</td> */}
                                         <td>{renderPrice(item)}</td>
                                         <td>{new Date(item.DateAdded).toLocaleString('ro-RO')}</td>
                                     </tr>
